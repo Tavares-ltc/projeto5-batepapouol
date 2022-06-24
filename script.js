@@ -4,6 +4,14 @@ let historicoMsg = ''
 
 let input = document.querySelector('input')
 
+
+// input.addEventListener("keyup", function (event) {
+//     event.preventDefault();
+//     if (event.keyCode === 13) {
+//         document.querySelector(".btn").click();
+//     }
+// });
+
 function userName() {
     username = input.value
     const texto = document.querySelector('.bottom input').value
@@ -35,6 +43,7 @@ function tratarErro(erro) {
     }
 }
 function logOn_Off() {
+    wipe();
     let entrada = document.querySelector('.entrada')
     let chat = document.querySelector('.page')
     entrada.classList.toggle('escondido')
@@ -81,5 +90,9 @@ function enviar() {
     };
     console.log(mensagem, texto, input.value)
 
-    axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", mensagem)
+    let promise = axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", mensagem)
+    promise.then(wipe)
+}
+function wipe() {
+    document.querySelector('.bottom input').value = ''
 }

@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="container-input">
-            <input placeholder="Digite seu nome" type="text">
+            <input onkeypress="if(event.key == 'Enter') {userName()}" placeholder="Digite seu nome" type="text">
             <div onclick="userName()" class="btn">Entrar</div>
         </div>
     </div>
@@ -32,7 +32,7 @@
 
         </div>
         <div class="bottom">
-            <input placeholder="Escreva aqui..." type="text">
+            <input onkeypress="if(event.key == 'Enter') {enviar()}" placeholder="Escreva aqui..." type="text">
             <ion-icon onclick="enviar()" name="paper-plane-outline"></ion-icon>
         </div>
     </div>
