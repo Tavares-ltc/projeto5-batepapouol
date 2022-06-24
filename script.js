@@ -1,6 +1,7 @@
 let username, hora, userStatus
 let mensagens = []
 let msg = document.querySelector('.container-msg')
+let historicoMsg = ''
 
 msg = 'lorem impsum teste porcaria do teste caramba loucura loucura'
 hora = '(09:21:45)'
@@ -46,24 +47,27 @@ function seguir(teste) {
     userStatus = true
     logOn_Off();
     setInterval(verificaOnline, 5000)
-    setInterval(buscaMsg, 1000)
-
-
-    //     <div class="msg">
-    //         ${hora} <strong>${username}</strong> entrou na sala...
-    //     </div>
+    setInterval(buscaMsg, 3000)
 }
 function buscaMsg() {
     let promise = axios.get("https://mock-api.driven.com.br/api/v6/uol/messages")
     promise.then(historico)
 }
 function historico(lista) {
-    if (mensagens.includes(lista.data)){
-        return;
+    historicoMsg = ''
+    for (let i = 0; i < 100; i++) {
+        if ((lista.data[i].text === 'sai da sala...') || (lista.data[i].text === "entra na sala...")) {
+            historicoMsg +=
+        `<div class="msg entrou">
+            (${lista.data[i].time}) <strong>${lista.data[i].from}</strong> ${lista.data[i].text}
+        </div>`;
+        }
+        else {
+            historicoMsg +=
+            `<div class="msg">
+            (${lista.data[i].time}) <strong>${lista.data[i].from}</strong> ${lista.data[i].text}
+            </div>`;
+        }
     }
-    else {
-        mensagens.push(lista.data)
-    }
-
-    console.log(mensagens)
+    document.querySelector('.container-msg').innerHTML = historicoMsg
 }
