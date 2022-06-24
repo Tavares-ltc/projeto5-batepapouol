@@ -1,16 +1,10 @@
 let username, userStatus
 let msg = document.querySelector('.container-msg')
 let historicoMsg = ''
+let visibilidade
+let destinatario
 
 let input = document.querySelector('input')
-
-
-// input.addEventListener("keyup", function (event) {
-//     event.preventDefault();
-//     if (event.keyCode === 13) {
-//         document.querySelector(".btn").click();
-//     }
-// });
 
 function userName() {
     username = input.value
@@ -52,6 +46,8 @@ function logOn_Off() {
 function seguir(teste) {
     userStatus = true
     logOn_Off();
+    listaOnline();
+    setInterval(listaOnline, 10000)
     setInterval(verificaOnline, 5000)
     setInterval(buscaMsg, 3000)
 }
@@ -65,14 +61,22 @@ function historico(lista) {
         if ((lista.data[i].text === 'sai da sala...') || (lista.data[i].text === "entra na sala...")) {
             historicoMsg +=
                 `<div class="msg entrou">
-            (${lista.data[i].time}) <strong>${lista.data[i].from}</strong> ${lista.data[i].text}
+                <em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}</strong> ${lista.data[i].text}
+        </div>`;
+        }
+        else if (lista.data[i].to === input.value) {
+            `<div class="msg reservada">
+                <em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}</strong> ${lista.data[i].text}
         </div>`;
         }
         else {
-            historicoMsg +=
-                `<div class="msg">
-            (${lista.data[i].time}) <strong>${lista.data[i].from}:</strong> ${lista.data[i].text}
+            if (lista.data[i].to === 'Todos')
+                historicoMsg +=
+                    `<div class="msg">
+            <em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}:</strong> ${lista.data[i].text}
             </div>`;
+            else {
+            }
         }
     }
     document.querySelector('.container-msg').innerHTML = historicoMsg
@@ -95,4 +99,57 @@ function enviar() {
 }
 function wipe() {
     document.querySelector('.bottom input').value = ''
+}
+
+function direcionamento() {
+    let sidebar = document.querySelector('.side-bar')
+    sidebar.classList.toggle('escondido')
+}
+function setVisibility(button) {
+    let visibilidadeDiv = document.querySelector('.visibilidade')
+    let listaChecks = visibilidadeDiv.querySelectorAll('.checkmark')
+    limpaChecks(listaChecks);
+    let checkMark = button.querySelector('.checkmark');
+        checkMark.classList.remove('hidden');
+    visibilidade = button.querySelector('h4').innerText
+    console.log(visibilidade)
+}
+function to(selecionado) {
+let listaDestinatarios = document.querySelectorAll('.direct .checkmark')
+limpaChecks(listaDestinatarios)
+selecionado.querySelector('.checkmark').classList.remove('hidden')
+destinatario = selecionado.querySelector('h4').innerText
+console.log(destinatario)
+}
+
+function limpaChecks(lista) {
+    for(let i = 0; i < lista.length; i++){
+        lista[i].classList.add('hidden')
+    }
+}
+
+function listaOnline(){
+let promise = axios.get("https://mock-api.driven.com.br/api/v6/uol/participants")
+promise.then(processarLista)
+}
+
+function processarLista(lista) {
+    for (i = 0; i < lista.data.name.length; i++){
+        let nameOnline = lista.data[i].name
+        console.log(nameOnline)
+
+        let direct = document.querySelector('.direct')
+        direct += 
+`
+<div identifier="participant" onclick="to(this)">
+    <div>
+        <ion-icon name="person-circle"></ion-icon>
+        <h4>${nameOnline}</h4>
+    </div>
+    <div class="checkmark hidden">
+        <ion-icon name="checkmark-outline"></ion-icon>
+    </div>
+</div>
+`;
+    }
 }
