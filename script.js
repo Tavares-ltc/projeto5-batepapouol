@@ -1,10 +1,7 @@
-let username, hora, userStatus
-let mensagens = []
+let username, userStatus
 let msg = document.querySelector('.container-msg')
 let historicoMsg = ''
 
-msg = 'lorem impsum teste porcaria do teste caramba loucura loucura'
-hora = '(09:21:45)'
 let input = document.querySelector('input')
 
 function userName() {
@@ -58,16 +55,31 @@ function historico(lista) {
     for (let i = 0; i < 100; i++) {
         if ((lista.data[i].text === 'sai da sala...') || (lista.data[i].text === "entra na sala...")) {
             historicoMsg +=
-        `<div class="msg entrou">
+                `<div class="msg entrou">
             (${lista.data[i].time}) <strong>${lista.data[i].from}</strong> ${lista.data[i].text}
         </div>`;
         }
         else {
             historicoMsg +=
-            `<div class="msg">
-            (${lista.data[i].time}) <strong>${lista.data[i].from}</strong> ${lista.data[i].text}
+                `<div class="msg">
+            (${lista.data[i].time}) <strong>${lista.data[i].from}:</strong> ${lista.data[i].text}
             </div>`;
         }
     }
     document.querySelector('.container-msg').innerHTML = historicoMsg
+    let ultimaMsg = document.querySelector('.msg:last-of-type')
+    ultimaMsg.scrollIntoView()
+}
+function enviar() {
+    let texto = document.querySelector('.bottom input').value
+    const mensagem =
+    {
+        from: input.value,
+        to: "Todos",
+        text: texto,
+        type: "message"
+    };
+    console.log(mensagem, texto, input.value)
+
+    axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", mensagem)
 }
