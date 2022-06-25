@@ -175,6 +175,7 @@ body div {
     box-sizing: border-box;
     width: 100%;
     height: 100%;
+    padding-bottom:80px ;
     background-color: #f3f3f3;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -323,6 +324,9 @@ body {
 .escondido {
     display: none;
 }
+.side-bar{
+    overflow-y: auto;
+}
 
 .menu h3:last-of-type {
     margin-bottom: 2px;
@@ -346,7 +350,10 @@ body {
     }
 
     .side-bar {
-        height: 100%;
+        height: 100%;   
+    }
+    .side-bar .escondido {
+
     }
 
     .page::-webkit-scrollbar {
