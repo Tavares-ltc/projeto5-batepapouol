@@ -5,6 +5,14 @@
     font-style: normal;
 }
 
+* h7 {
+    font-size: 10px;
+    margin-left: 10px;
+    color: #505050;
+    font-style: italic;
+}
+
+
 html,
 body {
     font-family: 'roboto';
@@ -55,7 +63,7 @@ body {
 
 .direct {
     flex-direction: column;
-    max-height: 50%;
+    max-height: 30%;
     overflow-y: scroll;
 }
 
@@ -116,9 +124,11 @@ body div {
     align-items: center;
 
 }
-.loading{
+
+.loading {
     width: 100px;
 }
+
 .container-input>input {
     width: 261px;
     height: 54px;
@@ -165,7 +175,7 @@ body div {
     box-sizing: border-box;
     width: 100%;
     height: 100%;
-    background-color: #E5E5E5;
+    background-color: #f3f3f3;
     overflow-x: hidden;
     overflow-y: scroll;
     position: relative;
@@ -188,19 +198,29 @@ body div {
     height: 75px;
     height: 53px;
 }
+.header img:hover {
+    cursor: pointer;
+}
 
 .bottom {
     background-color: #FFFFFF;
     width: 375px;
     height: 80px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: 0 20px;
     box-shadow: 0 -4px 2px rgb(0, 0, 0, 0.2);
     position: fixed;
     bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 
+}
+
+.bottom div:first-of-type {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-height: 100%;
 }
 
 .bottom input {
@@ -233,25 +253,32 @@ body div {
 }
 
 .container-msg {
-    margin-top: 95px;
-    margin-bottom: 95px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
 
 }
+
 .entrada div:last-of-type {
     display: flex;
     flex-direction: column;
 
 }
+
 .msg {
+
     margin-top: 15px;
+    padding: auto;
     min-height: 40px;
     width: 100%;
     background-color: #FFFFFF;
     line-break: anywhere;
 
+}
+.msg p {
+    margin: 0 5px;
 }
 
 
@@ -286,12 +313,18 @@ body {
 .reservada {
     background-color: #FFDEDE;
 }
+
 .stat {
     justify-content: center;
-    color: red;
+    color: green;
 }
+
 .escondido {
     display: none;
+}
+
+.menu h3:last-of-type {
+    margin-bottom: 2px;
 }
 
 @media screen and (max-width: 610px) {
@@ -309,6 +342,10 @@ body {
     .bottom,
     .side-bar {
         width: 100%;
+    }
+
+    .side-bar {
+        height: 100%;
     }
 
     .page::-webkit-scrollbar {

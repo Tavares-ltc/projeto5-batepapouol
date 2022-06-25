@@ -28,15 +28,18 @@
     </div>
     <div class="page escondido">
         <div class="header">
-            <img src="img/logo2.svg" alt="">
-            <img onclick="direcionamento()" src="img/todos.svg" alt="">
+            <img onclick="deslogar()" src="img/logo2.svg">
+            <img onclick="direcionamento()" src="img/todos.svg">
         </div>
         <div class="container-msg">
 
         </div>
         <div class="bottom">
-            <input onkeypress="if(event.key == 'Enter') {enviar()}" placeholder="Escreva aqui..." type="text">
-            <ion-icon onclick="enviar()" name="paper-plane-outline"></ion-icon>
+            <div>
+                <input onkeypress="if(event.key == 'Enter') {enviar()}" placeholder="Escreva aqui..." type="text">
+                <ion-icon onclick="enviar()" name="paper-plane-outline"></ion-icon>
+            </div>
+            <h7 class="escondido">Público</h7>
         </div>
     </div>
     <div class="side-bar escondido">
@@ -78,9 +81,9 @@
                     </div>
                 </div>
             </div>
-            <h3>Deseja desativar mensagens de status?</h3>
+            <h3>Mensagens de status?</h3>
             <div class="stat">
-                <h4 onclick="change(this)">Não</h4>
+                <h4 onclick="change(this)">Sim</h4>
             </div>        
 
         </div>

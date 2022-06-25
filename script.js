@@ -1,24 +1,26 @@
-let username, userStatus
+let username, visibilidade, destinatario, selecionadoHTML, listaPessoasOnline
 let msg = document.querySelector('.container-msg')
 let historicoMsg = ''
-let visibilidade
-let destinatario
 let stat = true
 let input = document.querySelector('input')
 
+function deslogar (){
+    if (confirm('Tem certeza que deseja sair?')){
+        document.location.reload(true);
+    }
+}
+
 function userName() {
-let container = document.querySelector('.container-input')
-container.remove()
-let loading = document.querySelector('.loading')
-let loadingMsg = document.querySelector('.loadingMsg')
-loading.classList.remove('escondido')
-loadingMsg.classList.remove('escondido')
+    let container = document.querySelector('.container-input')
+    container.remove()
+    let loading = document.querySelector('.loading')
+    let loadingMsg = document.querySelector('.loadingMsg')
+    loading.classList.remove('escondido')
+    loadingMsg.classList.remove('escondido')
 
     username = input.value
     const texto = document.querySelector('.bottom input').value
     const login = { name: username };
-
-
 
     let promise = axios.post("https://mock-api.driven.com.br/api/v6/uol/participants", login);
     promise.then(seguir)
@@ -51,7 +53,6 @@ function logOn_Off() {
     chat.classList.toggle('escondido')
 }
 function seguir(teste) {
-    userStatus = true
     logOn_Off();
     listaOnline();
     buscaMsg();
@@ -69,7 +70,7 @@ function historico(lista) {
         if ((lista.data[i].type === "status") && (stat === true)) {
             historicoMsg +=
                 `<div class="msg entrou">
-                <em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}</strong> ${lista.data[i].text}
+                <p><em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}</strong> ${lista.data[i].text}</p>
         </div>`;
         }
         if ((lista.data[i].type === "status") && (stat === false)) {
@@ -78,20 +79,20 @@ function historico(lista) {
         else if (lista.data[i].to !== "Todos" && lista.data[i].type === "message") {
             historicoMsg +=
                 `<div class="msg">
-                <em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}</strong> para <strong>${lista.data[i].to}</strong>: ${lista.data[i].text}
+                <p><em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}</strong> para <strong>${lista.data[i].to}</strong>: ${lista.data[i].text}</p>
         </div>`;
         }
         else if ((lista.data[i].type === "private_message") && (lista.data[i].to === input.value || lista.data[i].to === "Todos" || lista.data[i].from === input.value)) {
             historicoMsg +=
                 `<div class="msg reservada">
-                <em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}</strong> para <strong>${lista.data[i].to}</strong>: ${lista.data[i].text}
+                <p><em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}</strong> para <strong>${lista.data[i].to}</strong>: ${lista.data[i].text}</p>
         </div>`;
         }
         else {
-            if (lista.data[i].to === 'Todos')
+            if (lista.data[i].to === 'Todos' && lista.data[i].type === "message")
                 historicoMsg +=
                     `<div class="msg">
-            <em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}:</strong> ${lista.data[i].text}
+           <p> <em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}:</strong> ${lista.data[i].text}</p>
             </div>`;
             else {
             }
@@ -104,12 +105,9 @@ function historico(lista) {
     }
 }
 function enviar() {
-    if (destinatario === undefined) {
-        destinatario = "Todos"
-    }
-    if (visibilidade === undefined) {
-        visibilidade = "message"
-    }
+
+    destinatarioOnline()
+
     let texto = document.querySelector('.bottom input').value
     const mensagem =
     {
@@ -122,6 +120,12 @@ function enviar() {
 
     let promise = axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", mensagem)
     promise.then(wipe)
+}
+function destinatarioOnline() {
+    if (listaPessoasOnline.includes(destinatario) || destinatario === "Todos") {
+
+    }
+    else { alert('O destinatário ficou offline') }
 }
 function wipe() {
     document.querySelector('.bottom input').value = ''
@@ -145,7 +149,7 @@ function setVisibility(button) {
     else {
         visibilidade = "private_message"
     }
-
+    indicaDestinatario()
 }
 function to(selecionado) {
     let listaDestinatarios = document.querySelectorAll('.direct .checkmark')
@@ -153,6 +157,8 @@ function to(selecionado) {
     selecionado.querySelector('.checkmark').classList.remove('hidden')
     destinatario = selecionado.querySelector('h4').innerText
     console.log(destinatario)
+    indicaDestinatario()
+    selecionadoHTML = selecionado.innerHTML
 }
 
 function limpaChecks(lista) {
@@ -164,52 +170,111 @@ function limpaChecks(lista) {
 function listaOnline() {
     let promise = axios.get("https://mock-api.driven.com.br/api/v6/uol/participants")
     promise.then(processarLista)
-    promise.catch(erroLista)
-}
-function erroLista() {
 }
 
 function processarLista(lista) {
     let direct = document.querySelector('.direct')
     let todasPessoas = ''
-
-    todasPessoas += `
+    listaPessoasOnline = []
+    if (destinatario === "Todos" || destinatario === undefined) {
+        todasPessoas += `
     <div onclick="to(this)">
-        <div>
-            <ion-icon name="person-circle"></ion-icon>
-            <h4>Todos</h4>
-        </div>
-        <div class="checkmark">
-            <ion-icon name="checkmark-outline"></ion-icon>
-        </div>
+    <div>
+    <ion-icon name="person-circle"></ion-icon>
+    <h4>Todos</h4>
+    </div>
+    <div class="checkmark">
+    <ion-icon name="checkmark-outline"></ion-icon>
+    </div>
     </div>`;
+    }
+    else {
+        todasPessoas += `
+    <div onclick="to(this)">
+    <div>
+    <ion-icon name="person-circle"></ion-icon>
+    <h4>Todos</h4>
+    </div>
+    <div class="checkmark hidden">
+    <ion-icon name="checkmark-outline"></ion-icon>
+    </div>
+    </div>`;
+    }
 
     for (i = 0; i < lista.data.length; i++) {
         let nameOnline = lista.data[i].name
+        listaPessoasOnline.push(lista.data[i].name)
 
-        todasPessoas += `<div onclick="to(this)">
+        if (nameOnline === destinatario) {
+
+            todasPessoas += `<div onclick="to(this)">
     <div>
         <ion-icon name="person-circle"></ion-icon>
         <h4>${nameOnline}</h4>
     </div>
-    <div class="checkmark hidden">
+    <div class="checkmark">
         <ion-icon name="checkmark-outline"></ion-icon>
     </div>
 </div>
 `;
+        }
+        else {
+
+
+            todasPessoas += `<div onclick="to(this)">
+            <div>
+            <ion-icon name="person-circle"></ion-icon>
+            <h4>${nameOnline}</h4>
+            </div>
+            <div class="checkmark hidden">
+            <ion-icon name="checkmark-outline"></ion-icon>
+            </div>
+            </div>
+            `;
+        }
     }
 
     direct.innerHTML = todasPessoas
 }
 function change(button) {
-    if(button.innerHTML === "Não"){
-        button.innerHTML = "Sim"
-        button.style.color = "green"
+    if (button.innerHTML === "Sim") {
+        button.innerHTML = "Não"
+        button.style.color = "red"
         stat = false
     }
     else {
-        button.innerHTML = "Não"
-        button.style.color = "red"
+        button.innerHTML = "Sim"
+        button.style.color = "green"
         stat = true
+    }
+}
+function indicaDestinatario() {
+    if (destinatario === undefined) {
+        destinatario = "Todos"
+    }
+    if (visibilidade === undefined) {
+        visibilidade = "message"
+    }
+
+    let visibilidadeText
+    if (visibilidade === "message") {
+        visibilidadeText = "publicamente"
+    }
+    else {
+        visibilidadeText = "reservadamente"
+    }
+
+    const indDest = document.querySelector('.bottom h7')
+    if ((visibilidade === "message") && (destinatario === "Todos")) {
+        if (document.querySelector('.bottom .escondido') === null) {
+            return;
+        }
+        else {
+            indDest.classList.add('escondido')
+        }
+    }
+    else {
+        indDest.innerHTML = `Enviando para ${destinatario} (${visibilidadeText})`
+        indDest.classList.remove('escondido')
     }
 }
