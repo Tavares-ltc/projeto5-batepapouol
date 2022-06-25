@@ -5,8 +5,6 @@
     font-style: normal;
 }
 
-* h3 {}
-
 html,
 body {
     font-family: 'roboto';
@@ -24,7 +22,7 @@ body {
     bottom: 0;
 }
 
-.transp-bar{
+.transp-bar {
     width: 30%;
     background-color: rgba(14, 13, 13, 0.7);
 }
@@ -35,6 +33,7 @@ body {
     text-align: start;
     padding: 20px;
 }
+
 .menu ion-icon {
     width: 20px;
     height: 20px;
@@ -43,44 +42,51 @@ body {
 
 .menu div {
     display: flex;
-    justify-content: start;
     align-items: center;
 }
+
 .menu div:hover {
-    cursor:pointer;
+    cursor: pointer;
 }
 
-.menu  h3{
+.menu h3 {
     text-align: center;
 }
+
 .direct {
     flex-direction: column;
-    max-height: 60%;
+    max-height: 50%;
     overflow-y: scroll;
 }
-.direct > div{
+
+.direct>div {
     width: 100%;
     flex-direction: row;
     justify-content: space-between;
 }
+
 .side-bar {
     position: absolute;
     width: 375px;
     bottom: 0;
     display: flex;
 }
+
 .visibilidade {
     flex-direction: column;
 }
-.visibilidade > div {
+
+.visibilidade>div {
     width: 100%;
     flex-direction: row;
     justify-content: space-between;
 }
+
 .checkmark {
     color: #28BB25;
     height: 100%;
 }
+
 body div {
     box-sizing: border-box;
 
@@ -110,7 +116,9 @@ body div {
     align-items: center;
 
 }
-
+.loading{
+    width: 100px;
+}
 .container-input>input {
     width: 261px;
     height: 54px;
@@ -147,9 +155,8 @@ body div {
 }
 
 
-.escondido {
-    display: none;
-}
+
+
 .hidden {
     visibility: hidden;
 }
@@ -233,7 +240,11 @@ body div {
     align-items: center;
 
 }
+.entrada div:last-of-type {
+    display: flex;
+    flex-direction: column;
 
+}
 .msg {
     margin-top: 15px;
     min-height: 40px;
@@ -275,7 +286,13 @@ body {
 .reservada {
     background-color: #FFDEDE;
 }
-
+.stat {
+    justify-content: center;
+    color: red;
+}
+.escondido {
+    display: none;
+}
 
 @media screen and (max-width: 610px) {
 

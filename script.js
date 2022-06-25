@@ -3,10 +3,17 @@ let msg = document.querySelector('.container-msg')
 let historicoMsg = ''
 let visibilidade
 let destinatario
-
+let stat = true
 let input = document.querySelector('input')
 
 function userName() {
+let container = document.querySelector('.container-input')
+container.remove()
+let loading = document.querySelector('.loading')
+let loadingMsg = document.querySelector('.loadingMsg')
+loading.classList.remove('escondido')
+loadingMsg.classList.remove('escondido')
+
     username = input.value
     const texto = document.querySelector('.bottom input').value
     const login = { name: username };
@@ -24,15 +31,16 @@ function verificaOnline() {
 }
 
 function tratarErro(erro) {
+
     erro = erro.response.status;
     if (erro === 400) {
         alert(`Erro ${erro}, nome ${input.value} já em uso...`)
         input.value = ''
-        Location.reload
+        document.location.reload(true);
     }
     else {
         alert(`Erro ${erro}, tente novamente mais tarde.`)
-        Location.reload
+        document.location.reload(true);
     }
 }
 function logOn_Off() {
@@ -58,12 +66,15 @@ function buscaMsg() {
 function historico(lista) {
     historicoMsg = ''
     for (let i = 0; i < 100; i++) {
-        if ((lista.data[i].type === "status")) {
+        if ((lista.data[i].type === "status") && (stat === true)) {
             historicoMsg +=
                 `<div class="msg entrou">
                 <em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}</strong> ${lista.data[i].text}
         </div>`;
         }
+        if ((lista.data[i].type === "status") && (stat === false)) {
+        }
+
         else if (lista.data[i].to !== "Todos" && lista.data[i].type === "message") {
             historicoMsg +=
                 `<div class="msg">
@@ -88,7 +99,9 @@ function historico(lista) {
     }
     document.querySelector('.container-msg').innerHTML = historicoMsg
     let ultimaMsg = document.querySelector('.msg:last-of-type')
-    ultimaMsg.scrollIntoView()
+    if (ultimaMsg !== undefined) {
+        ultimaMsg.scrollIntoView()
+    }
 }
 function enviar() {
     if (destinatario === undefined) {
@@ -187,4 +200,16 @@ function processarLista(lista) {
     }
 
     direct.innerHTML = todasPessoas
+}
+function change(button) {
+    if(button.innerHTML === "Não"){
+        button.innerHTML = "Sim"
+        button.style.color = "green"
+        stat = false
+    }
+    else {
+        button.innerHTML = "Não"
+        button.style.color = "red"
+        stat = true
+    }
 }
