@@ -21,7 +21,6 @@ function verificaOnline() {
     username = input.value
     const login = { name: username }
     axios.post("https://mock-api.driven.com.br/api/v6/uol/status", login)
-    console.log(`${username} está online.`)
 }
 
 function tratarErro(erro) {
@@ -47,6 +46,7 @@ function seguir(teste) {
     userStatus = true
     logOn_Off();
     listaOnline();
+    buscaMsg();
     setInterval(listaOnline, 10000)
     setInterval(verificaOnline, 5000)
     setInterval(buscaMsg, 3000)
@@ -58,15 +58,22 @@ function buscaMsg() {
 function historico(lista) {
     historicoMsg = ''
     for (let i = 0; i < 100; i++) {
-        if ((lista.data[i].text === 'sai da sala...') || (lista.data[i].text === "entra na sala...")) {
+        if ((lista.data[i].type === "status")) {
             historicoMsg +=
                 `<div class="msg entrou">
                 <em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}</strong> ${lista.data[i].text}
         </div>`;
         }
-        else if (lista.data[i].to === input.value) {
-            `<div class="msg reservada">
-                <em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}</strong> ${lista.data[i].text}
+        else if (lista.data[i].to !== "Todos" && lista.data[i].type === "message") {
+            historicoMsg +=
+                `<div class="msg">
+                <em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}</strong> para <strong>${lista.data[i].to}</strong>: ${lista.data[i].text}
+        </div>`;
+        }
+        else if ((lista.data[i].type === "private_message") && (lista.data[i].to === input.value || lista.data[i].to === "Todos" || lista.data[i].from === input.value)) {
+            historicoMsg +=
+                `<div class="msg reservada">
+                <em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}</strong> para <strong>${lista.data[i].to}</strong>: ${lista.data[i].text}
         </div>`;
         }
         else {
@@ -84,13 +91,19 @@ function historico(lista) {
     ultimaMsg.scrollIntoView()
 }
 function enviar() {
+    if (destinatario === undefined) {
+        destinatario = "Todos"
+    }
+    if (visibilidade === undefined) {
+        visibilidade = "message"
+    }
     let texto = document.querySelector('.bottom input').value
     const mensagem =
     {
         from: input.value,
-        to: "Todos",
+        to: destinatario,
         text: texto,
-        type: "message"
+        type: visibilidade
     };
     console.log(mensagem, texto, input.value)
 
@@ -110,38 +123,58 @@ function setVisibility(button) {
     let listaChecks = visibilidadeDiv.querySelectorAll('.checkmark')
     limpaChecks(listaChecks);
     let checkMark = button.querySelector('.checkmark');
-        checkMark.classList.remove('hidden');
+    checkMark.classList.remove('hidden');
     visibilidade = button.querySelector('h4').innerText
     console.log(visibilidade)
+    if (visibilidade === "Público") {
+        visibilidade = "message"
+    }
+    else {
+        visibilidade = "private_message"
+    }
+
 }
 function to(selecionado) {
-let listaDestinatarios = document.querySelectorAll('.direct .checkmark')
-limpaChecks(listaDestinatarios)
-selecionado.querySelector('.checkmark').classList.remove('hidden')
-destinatario = selecionado.querySelector('h4').innerText
-console.log(destinatario)
+    let listaDestinatarios = document.querySelectorAll('.direct .checkmark')
+    limpaChecks(listaDestinatarios)
+    selecionado.querySelector('.checkmark').classList.remove('hidden')
+    destinatario = selecionado.querySelector('h4').innerText
+    console.log(destinatario)
 }
 
 function limpaChecks(lista) {
-    for(let i = 0; i < lista.length; i++){
+    for (let i = 0; i < lista.length; i++) {
         lista[i].classList.add('hidden')
     }
 }
 
-function listaOnline(){
-let promise = axios.get("https://mock-api.driven.com.br/api/v6/uol/participants")
-promise.then(processarLista)
+function listaOnline() {
+    let promise = axios.get("https://mock-api.driven.com.br/api/v6/uol/participants")
+    promise.then(processarLista)
+    promise.catch(erroLista)
+}
+function erroLista() {
 }
 
 function processarLista(lista) {
-    for (i = 0; i < lista.data.name.length; i++){
-        let nameOnline = lista.data[i].name
-        console.log(nameOnline)
+    let direct = document.querySelector('.direct')
+    let todasPessoas = ''
 
-        let direct = document.querySelector('.direct')
-        direct += 
-`
-<div identifier="participant" onclick="to(this)">
+    todasPessoas += `
+    <div onclick="to(this)">
+        <div>
+            <ion-icon name="person-circle"></ion-icon>
+            <h4>Todos</h4>
+        </div>
+        <div class="checkmark">
+            <ion-icon name="checkmark-outline"></ion-icon>
+        </div>
+    </div>`;
+
+    for (i = 0; i < lista.data.length; i++) {
+        let nameOnline = lista.data[i].name
+
+        todasPessoas += `<div onclick="to(this)">
     <div>
         <ion-icon name="person-circle"></ion-icon>
         <h4>${nameOnline}</h4>
@@ -152,4 +185,6 @@ function processarLista(lista) {
 </div>
 `;
     }
+
+    direct.innerHTML = todasPessoas
 }
