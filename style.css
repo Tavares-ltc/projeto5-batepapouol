@@ -268,17 +268,19 @@ body div {
 }
 
 .msg {
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     margin-top: 15px;
-    padding: auto;
     min-height: 40px;
     width: 100%;
     background-color: #FFFFFF;
     line-break: anywhere;
+    border-radius: 4px;
 
 }
 .msg p {
-    margin: 0 5px;
+    margin:0 5px;
 }
 
 
@@ -289,7 +291,6 @@ body div {
 .page::-webkit-scrollbar {
     width: 0px;
     -ms-overflow-style: none;
-    /* IE 11 */
     scrollbar-width: none;
 }
 

@@ -85,7 +85,7 @@ function historico(lista) {
         else if ((lista.data[i].type === "private_message") && (lista.data[i].to === input.value || lista.data[i].to === "Todos" || lista.data[i].from === input.value)) {
             historicoMsg +=
                 `<div class="msg reservada">
-                <p><em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}</strong> para <strong>${lista.data[i].to}</strong>: ${lista.data[i].text}</p>
+                <p><em>(${lista.data[i].time})</em> <strong>${lista.data[i].from}</strong> reservadamente para <strong>${lista.data[i].to}</strong>: ${lista.data[i].text}</p>
         </div>`;
         }
         else {
@@ -266,7 +266,7 @@ function indicaDestinatario() {
 
     const indDest = document.querySelector('.bottom h7')
     if ((visibilidade === "message") && (destinatario === "Todos")) {
-        if (document.querySelector('.bottom .escondido') === null) {
+        if (document.querySelector('.bottom .escondido') !== null) {
             return;
         }
         else {
